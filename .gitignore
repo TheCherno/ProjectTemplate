@@ -11,4 +11,8 @@ Binaries/
 Makefile
 
 # Exclude
-!Vendor/Binaries
+!Vendor/Binaries.
+.DS_Store
+*.xcworkspace
+*.xcodeproj
+

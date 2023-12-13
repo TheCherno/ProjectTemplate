@@ -1,1 +1,11 @@
-TestTest
+{
+   "songs" : {
+      "Lose Yourself" : {
+         "artist" : "Eminem",
+         "hasLyricsAvailable" : true,
+         "sizeInBytes" : -1,
+         "songName" : "Lose Yourself",
+         "storageLocation" : "None"
+      }
+   }
+}

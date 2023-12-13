@@ -1,23 +1,15 @@
-project "App"
-   kind "ConsoleApp"
+project "Backend"
+   kind "StaticLib"
    language "C++"
    cppdialect "C++20"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { "./**.h", "./**.cpp" }
 
    includedirs
    {
-      "Source",
-
-	  -- Include Core
-	  "../Core/Source"
-   }
-
-   links
-   {
-      "Core"
+      "./"
    }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
@@ -25,7 +17,7 @@ project "App"
 
    filter "system:windows"
        systemversion "latest"
-       defines { "WINDOWS" }
+       defines { }
 
    filter "configurations:Debug"
        defines { "DEBUG" }

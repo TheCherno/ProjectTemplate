@@ -5,7 +5,7 @@
 #include "MusicTypes.h"
 
 namespace Backend {
-	int downloadSong(std::string url);
+	std::string downloadSong(std::string url);
 	int addToSongDirectory(Song song);
 	Song getSong(std::string songName);
 }

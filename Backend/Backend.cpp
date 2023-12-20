@@ -7,15 +7,45 @@
 #include "json\json.h"
 
 #include <iostream>
+#include <cstdio>
+#include <memory>
+#include <string>
+#include <stdexcept>
 
 namespace Backend {
 	Json::Value loadedDirectory;
 
-	int downloadSong(std::string url) {
-		std::string cmd = "youtube-dl \"" + url + "\" -o " + getDownloadDirectory();
-		std::cout << cmd;
-		int status = std::system(cmd.c_str());
-		return status;
+	std::string exec(const char* cmd) {
+		char buffer[1024];
+		std::string result = "";
+		FILE* pipe = _popen(cmd, "r");
+		if (!pipe) throw std::runtime_error("popen() failed!");
+
+		while (fgets(buffer, sizeof(buffer), pipe) != NULL) {
+			result += buffer;
+		}
+
+		_pclose(pipe);
+		return result;
+	}
+
+	//Returns song name
+	std::string downloadSong(std::string url) {
+		std::string cmd = "youtube-dl \"" + url + "\" -o " + getDownloadDirectory() + " --write-thumbnail --format 251";
+
+		std::string output = exec(cmd.c_str());
+		//std::cout << output;
+		size_t position = output.find("[download] Destination: ");
+
+		if (position != std::string::npos) {
+			std::string filename = output.substr(position + strlen("[download] Destination: "));
+			std::cout << "Downloaded file: " << filename << std::endl;
+		}
+		else {
+			std::cout << "File name not found in the output." << std::endl;
+		}
+
+		return cmd;
 	}
 
 	int addToSongDirectory(Song song) {
@@ -54,10 +84,10 @@ namespace Backend {
 		return 0;
 	}
 
-	/// <summary>
-	/// Test
-	/// </summary>
-	/// <param id="songName">Test</param>
+	int convertToWav(Song song) {
+		return 0;
+	}
+
 	Song getSong(std::string songName) {
 		Song song;
 

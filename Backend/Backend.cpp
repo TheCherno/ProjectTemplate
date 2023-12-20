@@ -34,18 +34,18 @@ namespace Backend {
 		std::string cmd = "youtube-dl \"" + url + "\" -o " + getDownloadDirectory() + " --write-thumbnail --format 251";
 
 		std::string output = exec(cmd.c_str());
-		//std::cout << output;
+
 		size_t position = output.find("[download] Destination: ");
 
 		if (position != std::string::npos) {
 			std::string filename = output.substr(position + strlen("[download] Destination: "));
-			std::cout << "Downloaded file: " << filename << std::endl;
+			return filename;
 		}
 		else {
-			std::cout << "File name not found in the output." << std::endl;
+			std::cout << "Couldnt find file path!" << std::endl;
 		}
-
-		return cmd;
+		
+		return "Couldnt find file path!";
 	}
 
 	int addToSongDirectory(Song song) {

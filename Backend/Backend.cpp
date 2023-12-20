@@ -54,6 +54,10 @@ namespace Backend {
 		return 0;
 	}
 
+	/// <summary>
+	/// Test
+	/// </summary>
+	/// <param id="songName">Test</param>
 	Song getSong(std::string songName) {
 		Song song;
 

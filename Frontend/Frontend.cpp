@@ -16,8 +16,8 @@ int main()
 
 	Backend::addToSongDirectory(song);
 	Backend::getSong("Test");
-
 	std::cin >> url;
+	
 
 	Backend::downloadSong(url);
 

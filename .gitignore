@@ -2,6 +2,8 @@
 .vs/
 Binaries/
 
+./Frontend/MusicLibrary
+
 # Files
 *.vcxproj
 *.vcxproj.user

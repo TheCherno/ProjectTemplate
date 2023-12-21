@@ -6,6 +6,6 @@
 
 namespace Backend {
 	std::string downloadSong(std::string url);
-	int addToSongDirectory(Song song);
+	void addSong(std::string url);
 	Song getSong(std::string songName);
 }

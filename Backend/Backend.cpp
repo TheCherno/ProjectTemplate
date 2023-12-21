@@ -11,6 +11,7 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
+#include <algorithm>
 
 namespace Backend {
 	Json::Value loadedDirectory;
@@ -37,8 +38,11 @@ namespace Backend {
 
 		size_t position = output.find("[download] Destination: ");
 
+		std::cout << output;
+
 		if (position != std::string::npos) {
 			std::string filename = output.substr(position + strlen("[download] Destination: "));
+			//filename.
 			return filename;
 		}
 		else {
@@ -46,6 +50,32 @@ namespace Backend {
 		}
 		
 		return "Couldnt find file path!";
+	}
+
+	void addSong(std::string url) {
+		std::string filePath = downloadSong(url);
+
+		Song song;
+		song.storageLocation = filePath;
+
+		std::cout << song.storageLocation;
+
+		std::string songName;
+
+		std::cout << "Enter the name of the song: ";
+		std::cin >> songName;
+	
+		song.songName = songName;
+		
+		std::string artist;
+
+		std::cout << "Enter the artist: ";
+		std::cin >> artist;
+		song.artist = artist;
+
+		if (!addToSongDirectory()) {
+			std::cout << "Song coulnt be added to directory, deleting may be required!";
+		}
 	}
 
 	int addToSongDirectory(Song song) {
@@ -57,6 +87,7 @@ namespace Backend {
 
 		if (!reader.parse(file, root, true)) {
 			std::cout << "Something went wrong during loading" << "\n" << reader.getFormatedErrorMessages();
+			return 0;
 		}
 
 		file.close();
@@ -81,7 +112,7 @@ namespace Backend {
 		}
 		else { std::cout << "Song already exists!"; }
 
-		return 0;
+		return 1;
 	}
 
 	int convertToWav(Song song) {

@@ -1,11 +1,39 @@
 {
    "songs" : {
-      "Lose Yourself" : {
+      "HEARSTEEL - PARANOIA" : {
+         "artist" : "HEARTSTEEL",
+         "hasLyricsAvailable" : false,
+         "sizeInBytes" : 3604035,
+         "songName" : "HEARSTEEL - PARANOIA",
+         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).webm"
+      },
+      "Hearsteel-Paranoi THIS ONE" : {
+         "artist" : "THIS",
+         "hasLyricsAvailable" : false,
+         "sizeInBytes" : 3604035,
+         "songName" : "Hearsteel-Paranoi THIS ONE",
+         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).wav"
+      },
+      "Heartsteel - PARANOIA" : {
+         "artist" : "Heartsteel",
+         "hasLyricsAvailable" : false,
+         "sizeInBytes" : 3604035,
+         "songName" : "Heartsteel - PARANOIA",
+         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).webm"
+      },
+      "PARANOIA" : {
+         "artist" : "HEARTSTEEL",
+         "hasLyricsAvailable" : false,
+         "sizeInBytes" : 3604035,
+         "songName" : "PARANOIA",
+         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).webm"
+      },
+      "Stan - Eminem" : {
          "artist" : "Eminem",
-         "hasLyricsAvailable" : true,
-         "sizeInBytes" : -1,
-         "songName" : "Lose Yourself",
-         "storageLocation" : "None"
+         "hasLyricsAvailable" : false,
+         "sizeInBytes" : 7435836,
+         "songName" : "Stan - Eminem",
+         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\Eminem - Stan (Long Version) ft. Dido.webm"
       }
    }
 }

@@ -3,15 +3,15 @@
 
 #include "MusicTypes.h"
 
-#include <fstream>
 #include "json\json.h"
+#include <fstream>
 
-#include <iostream>
-#include <cstdio>
-#include <memory>
-#include <string>
-#include <stdexcept>
 #include <algorithm>
+#include <cstdio>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
 
 namespace Backend {
 	Json::Value loadedDirectory;
@@ -36,46 +36,86 @@ namespace Backend {
 
 		std::string output = exec(cmd.c_str());
 
-		size_t position = output.find("[download] Destination: ");
+		size_t positionDownloaded = output.find("has already been downloaded");
 
-		std::cout << output;
+		if (positionDownloaded == std::string::npos) {
 
-		if (position != std::string::npos) {
-			std::string filename = output.substr(position + strlen("[download] Destination: "));
-			//filename.
-			return filename;
+			size_t position = output.find("[download] Destination: ");
+
+			std::cout << output;
+
+			if (position != std::string::npos) {
+				std::string filename = output.substr(position + strlen("[download] Destination: "));
+
+				size_t pos = filename.find(".webm");
+
+				// Check if ".webm" is found
+				if (pos != std::string::npos) {
+					// Extract the substring up to the position of ".webm"
+					std::string result = filename.substr(0, pos + 5); // +5 to include ".webm"
+					//std::cout << "Modified file path: " << result << std::endl;
+					return result;
+				}
+				else {
+					std::cout << ".webm not found in the file path." << std::endl;
+					return "Wrong file format!";
+				}
+			}
+			else {
+				std::cout << "Couldnt find file path!" << std::endl;
+			}
 		}
 		else {
-			std::cout << "Couldnt find file path!" << std::endl;
+			return "-1";
 		}
-		
-		return "Couldnt find file path!";
 	}
 
 	void addSong(std::string url) {
 		std::string filePath = downloadSong(url);
 
+		if (filePath == "-1") {
+			std::cout << "Song already downloaded! Aborting...\n";
+			return;
+		}
+
+		std::string storageLocation = convertToWav(filePath);
+
 		Song song;
-		song.storageLocation = filePath;
+		song.storageLocation = storageLocation;
 
 		std::cout << song.storageLocation;
 
 		std::string songName;
 
-		std::cout << "Enter the name of the song: ";
-		std::cin >> songName;
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+		std::cout << "\nEnter the name of the song: \n";
+		
+		std::getline(std::cin, songName);
 	
 		song.songName = songName;
 		
 		std::string artist;
 
-		std::cout << "Enter the artist: ";
-		std::cin >> artist;
+		std::cout << "Enter the artist: \n";
+		std::getline(std::cin, artist);
 		song.artist = artist;
 
-		if (!addToSongDirectory()) {
-			std::cout << "Song coulnt be added to directory, deleting may be required!";
+		try {
+			std::uintmax_t fileSize = std::filesystem::file_size(filePath);
+			//std::cout << fileSize;
+			song.sizeInBytes = fileSize;
 		}
+		catch (const std::filesystem::filesystem_error& e) {
+			std::cerr << "Error: " << e.what() << std::endl;
+		}
+
+
+		if (!addToSongDirectory(song)) {
+			std::cout << "Song coulnt be added to directory, deleting may be required!\n";
+		}
+
+		reloadDirectory();
 	}
 
 	int addToSongDirectory(Song song) {
@@ -92,7 +132,7 @@ namespace Backend {
 
 		file.close();
 
-		std::cout << root;
+		//std::cout << root;
 
 		//Json::Value songs = root["songs"];
 
@@ -110,13 +150,24 @@ namespace Backend {
 
 			newFile.close();
 		}
-		else { std::cout << "Song already exists!"; }
+		else { std::cout << "Song already exists!\n"; }
 
 		return 1;
 	}
 
-	int convertToWav(Song song) {
-		return 0;
+	std::string convertToWav(std::string filePath) {
+
+		size_t dotPosition = filePath.find_last_of('.');
+
+		std::string fileNameWithoutExtension;
+
+		if (dotPosition != std::string::npos) {
+			fileNameWithoutExtension = filePath.substr(0, dotPosition);
+		}
+
+		system(("ffmpeg -i \"" + filePath + "\" -vn \"" + fileNameWithoutExtension + ".wav\"").c_str());
+
+		return fileNameWithoutExtension + ".wav";
 	}
 
 	Song getSong(std::string songName) {
@@ -130,11 +181,23 @@ namespace Backend {
 			song.hasLyricsAvailable = loadedDirectory["songs"][songName]["hasLyricsAvailable"].asBool();
 		}
 		else {
-			std::cout << "Couldn't find song in loaded dictionary";
+			std::cout << "Couldn't find song in loaded dictionary\n";
 			return song;
 		}
 
 		return song;
+	}
+
+	void reloadDirectory() {
+		Json::Reader reader;
+
+		std::ifstream file("SongDirectory.json");
+
+		if (!reader.parse(file, loadedDirectory, true)) {
+			std::cout << "Something went wrong during loading" << "\n" << reader.getFormatedErrorMessages();
+		}
+
+		std::cout << "Reloaded song directory\n";
 	}
 }
 

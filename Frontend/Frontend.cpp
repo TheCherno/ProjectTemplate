@@ -38,12 +38,10 @@ int main()
 		else if (action == "play") {
 			std::string songName;
 			iss >> songName;
-			Song song = Backend::getSong(songName);
-
-
+			Backend::playSong(songName);
 		}
 
 
-		system("cls");
+		//system("cls");
 	}
 }

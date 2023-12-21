@@ -13,6 +13,11 @@
 #include <stdexcept>
 #include <string>
 
+#include <Windows.h>
+#include <mmsystem.h>
+
+#include <SFML/Audio.hpp>
+
 namespace Backend {
 	Json::Value loadedDirectory;
 
@@ -87,7 +92,7 @@ namespace Backend {
 
 		std::string songName;
 
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 		std::cout << "\nEnter the name of the song: \n";
 		
@@ -198,6 +203,29 @@ namespace Backend {
 		}
 
 		std::cout << "Reloaded song directory\n";
+	}
+
+	void playSong(std::string songName) {
+		//const wchar_t* filePath = L"D:\CPP\Stealify\Frontend\MusicLibrary\TJ_beastboy & Mary Man - Modus.wav";
+
+		sf::SoundBuffer buffer;
+		sf::Sound sound;
+
+		std::string path = getSong(songName).storageLocation;
+
+		if (!buffer.loadFromFile(path)) {
+			std::cerr << "Failed to load audio file." << std::endl;
+		}
+
+		sound.sf::Sound::setBuffer(buffer);
+
+		sound.setVolume(10);
+
+		sound.play();
+
+		while (sound.getStatus() == sf::Sound::Playing) {
+			// Update or perform other tasks while the audio is playing
+		}
 	}
 }
 

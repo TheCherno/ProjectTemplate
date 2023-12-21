@@ -9,6 +9,7 @@ namespace Backend {
 	int addToSongDirectory(Song song);
 	void reloadDirectory();
 	std::string convertToWav(std::string filePath);
+	void playSong(std::string songName);
 	void addSong(std::string url);
 	Song getSong(std::string songName);
 }

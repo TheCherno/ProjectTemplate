@@ -4,6 +4,10 @@ Binaries/
 
 ./Frontend/MusicLibrary
 
+*.webm
+*.wav
+*.webp
+
 # Files
 *.vcxproj
 *.vcxproj.user

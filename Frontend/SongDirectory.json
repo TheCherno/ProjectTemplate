@@ -1,66 +1,10 @@
 {
    "songs" : {
-      "HEARSTEEL - PARANOIA" : {
-         "artist" : "HEARTSTEEL",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 3604035,
-         "songName" : "HEARSTEEL - PARANOIA",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).webm"
-      },
-      "Hearsteel" : {
-         "artist" : "Heartsteel",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 3604035,
-         "songName" : "Hearsteel",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).wav"
-      },
-      "Hearsteel-Paranoi THIS ONE" : {
-         "artist" : "THIS",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 3604035,
-         "songName" : "Hearsteel-Paranoi THIS ONE",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).wav"
-      },
-      "Heartsteel - PARANOIA" : {
-         "artist" : "Heartsteel",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 3604035,
-         "songName" : "Heartsteel - PARANOIA",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).webm"
-      },
-      "PARANOIA" : {
-         "artist" : "HEARTSTEEL",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 3604035,
-         "songName" : "PARANOIA",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).webm"
-      },
-      "Stan - Eminem" : {
-         "artist" : "Eminem",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 7435836,
-         "songName" : "Stan - Eminem",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\Eminem - Stan (Long Version) ft. Dido.webm"
-      },
-      "Test" : {
-         "artist" : "Test",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 3604035,
-         "songName" : "Test",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, \u061aI, and Cal Scruby (Official Music Video).wav"
-      },
-      "Test2" : {
-         "artist" : "Test2",
-         "hasLyricsAvailable" : false,
-         "sizeInBytes" : 3695090,
-         "songName" : "Test2",
-         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\TJ_beastboy - 1000x COOLER + W1NNER (beats by Young Kira).wav"
-      },
-      "a" : {
-         "artist" : "a",
+      "Modus" : {
+         "artist" : "TJ_beastboy & Mary Man",
          "hasLyricsAvailable" : false,
          "sizeInBytes" : 3669025,
-         "songName" : "a",
+         "songName" : "Modus",
          "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\TJ_beastboy & Mary Man - Modus.wav"
       }
    }

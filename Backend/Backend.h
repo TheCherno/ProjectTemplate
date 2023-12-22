@@ -12,4 +12,6 @@ namespace Backend {
 	void playSong(std::string songName);
 	void addSong(std::string url);
 	Song getSong(std::string songName);
+	void printAndHandleInput();
+	void setVolume(int volume);
 }

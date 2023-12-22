@@ -20,6 +20,86 @@
 
 namespace Backend {
 	Json::Value loadedDirectory;
+	Song currentSong;
+
+	std::string action;
+	std::string userInput;
+
+	sf::SoundBuffer buffer;
+	sf::Sound sound;
+
+	void printAndHandleInput() {
+		system("cls");
+		std::cout << "Currently playing: " + currentSong.songName + "\n";
+		std::cout << "------------" << (currentSong.isPlaying ? "Playing" : "Paused") << "------------" << std::endl << std::endl;
+
+		std::cout << "Type play <songName> to play a song" << std::endl;
+		std::cout << "Type download <url> to download a song" << std::endl;
+		std::cout << "Type volume <number between 0-100> to set the volume" << std::endl;
+		std::cout << "Type pause to pause the song" << std::endl;
+		std::cout << "Type resume to resume the song" << std::endl;
+
+		std::cout << std::endl;
+
+		std::cout << "Type reload to reload the song library" << std::endl;
+		std::cout << "Type list to list all available songs" << std::endl;
+
+
+		std::getline(std::cin, userInput);
+
+		std::istringstream iss(userInput);
+		iss >> action;
+
+		//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+		if (action == "download") {
+			std::string url;
+			iss >> url;
+			Backend::addSong(url);
+		}
+		else if (action == "play") {
+			std::string songName;
+			iss >> songName;
+			Backend::playSong(songName);
+		}
+		else if (action == "volume") {
+			int volume;
+			if (iss >> volume) {
+				setVolume(volume);
+			}
+			else {
+				float currentVolume = sound.getVolume();
+				std::cout << "Current volume set to " << currentVolume << std::endl;
+			}
+		}
+		else if (action == "pause") {
+			sound.pause();
+			currentSong.isPlaying = false;
+			currentSong.isPaused = true;
+		}
+		else if (action == "resume") {
+			sound.play();
+			currentSong.isPlaying = true;
+			currentSong.isPaused = false;
+		}
+		else if (action == "reload") {
+			reloadDirectory();
+		}
+		else if (action == "list") {
+			Json::Value songs = loadedDirectory["songs"];
+			int count = 1;
+			for (const auto& song : songs.getMemberNames()) {
+				std::string songName = songs[song]["songName"].asString();
+				std::cout << count << ".    " << songName << std::endl;
+				count++;
+			}
+		}
+		std::cout << "Press enter to continue";
+		std::string dummy;
+		std::getline(std::cin, dummy);
+
+		system("cls");
+	}
 
 	std::string exec(const char* cmd) {
 		char buffer[1024];
@@ -208,8 +288,8 @@ namespace Backend {
 	void playSong(std::string songName) {
 		//const wchar_t* filePath = L"D:\CPP\Stealify\Frontend\MusicLibrary\TJ_beastboy & Mary Man - Modus.wav";
 
-		sf::SoundBuffer buffer;
-		sf::Sound sound;
+		currentSong = getSong(songName);
+		currentSong.isPlaying = true;
 
 		std::string path = getSong(songName).storageLocation;
 
@@ -219,13 +299,16 @@ namespace Backend {
 
 		sound.sf::Sound::setBuffer(buffer);
 
-		sound.setVolume(10);
-
 		sound.play();
 
 		while (sound.getStatus() == sf::Sound::Playing) {
 			// Update or perform other tasks while the audio is playing
+			printAndHandleInput();
 		}
+	}
+
+	void setVolume(int volume) {
+		sound.setVolume(volume);
 	}
 }
 

@@ -7,6 +7,7 @@
 
 int main()
 {
+	//Backend::checkFFMPEGInstallation();
 	Backend::reloadDirectory();
 	std::string url;
 

@@ -32,7 +32,7 @@ namespace Backend {
 		system("cls");
 		std::cout << "Currently playing: " + currentSong.songName + "\n";
 		std::cout << "------------" << (currentSong.isPlaying ? "Playing" : "Paused") << "------------" << std::endl << std::endl;
-
+		
 		std::cout << "Type play <songName> to play a song" << std::endl;
 		std::cout << "Type download <url> to download a song" << std::endl;
 		std::cout << "Type volume <number between 0-100> to set the volume" << std::endl;
@@ -127,7 +127,7 @@ namespace Backend {
 
 			size_t position = output.find("[download] Destination: ");
 
-			std::cout << output;
+			//std::cout << output;
 
 			if (position != std::string::npos) {
 				std::string filename = output.substr(position + strlen("[download] Destination: "));
@@ -249,7 +249,7 @@ namespace Backend {
 		if (dotPosition != std::string::npos) {
 			fileNameWithoutExtension = filePath.substr(0, dotPosition);
 		}
-
+		
 		system(("ffmpeg -i \"" + filePath + "\" -vn \"" + fileNameWithoutExtension + ".wav\"").c_str());
 
 		return fileNameWithoutExtension + ".wav";
@@ -309,6 +309,59 @@ namespace Backend {
 
 	void setVolume(int volume) {
 		sound.setVolume(volume);
+	}
+
+	void checkFFMPEGInstallation() {
+		std::string output = exec("C:\\FFmpeg\\ffmpeg\\bin\\ffmpeg.exe");
+
+		std::cout << output;
+		//while (true) {}
+
+		if (output.find("cannot") != std::string::npos) {
+			std::cout << "FFMPEG not installed, downloading...";
+			const char* powershellScript = R"(
+			# PowerShell script content here
+			$ffmpegUrl = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
+			$ffmpegDirectory = "C:\FFmpeg"
+			$extractedFolder = "C:\FFmpeg\ffmpeg-master-latest-win64-gpl"
+			
+			# Create the directory if it doesn't exist
+			New-Item -ItemType Directory -Force -Path $ffmpegDirectory | Out-Null
+			
+			# Download and extract FFmpeg
+			Invoke-WebRequest -Uri $ffmpegUrl -OutFile "$ffmpegDirectory\ffmpeg.zip"
+			Expand-Archive -Path "$ffmpegDirectory\ffmpeg.zip" -DestinationPath $ffmpegDirectory -Force
+			
+			Start-Sleep -Seconds 2
+
+			# Rename the extracted folder to "ffmpeg"
+			Rename-Item -Path $extractedFolder -NewName "ffmpeg" -Force
+			
+			# Add the bin directory to the PATH
+			$binDirectory = Join-Path $ffmpegDirectory "ffmpeg\bin"
+			[Environment]::SetEnvironmentVariable("Path", "$($env:Path);$binDirectory", [System.EnvironmentVariableTarget]::User)
+			
+			Write-Host "FFmpeg has been downloaded, unzipped, and added to the PATH."
+
+			PAUSE
+			)";
+
+			const wchar_t* scriptFilePath = L"install_ffmpeg.ps1";
+			std::ofstream scriptFile("install_ffmpeg.ps1");
+			scriptFile << powershellScript;
+			scriptFile.close();
+
+			std::string output = exec("powershell.exe -ExecutionPolicy Bypass -File ./install_ffmpeg.ps1 -Verb RunAs");
+			std::cout << output;
+			remove("install_ffmpeg.ps1");
+
+			std::cout << std::endl;
+
+			std::cout << "Please restart the programm! Press Enter to exit";
+			std::string dummy;
+			std::getline(std::cin, dummy);
+			exit(0);
+		}
 	}
 }
 

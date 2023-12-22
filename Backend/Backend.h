@@ -14,4 +14,5 @@ namespace Backend {
 	Song getSong(std::string songName);
 	void printAndHandleInput();
 	void setVolume(int volume);
+	void checkFFMPEGInstallation();
 }

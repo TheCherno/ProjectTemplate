@@ -2,7 +2,6 @@ project "App"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"
-   targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
    files { "Source/**.h", "Source/**.cpp" }
@@ -12,7 +11,7 @@ project "App"
       "Source",
 
 	  -- Include Core
-	  "../Core/Source"
+	  CoresDir.."Core/Source"
    }
 
    links
@@ -20,8 +19,8 @@ project "App"
       "Core"
    }
 
-   targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+   targetdir ( OutputDir .. "/")
+   objdir (ObjDir .. "/%{prj.name}")
 
    filter "system:windows"
        systemversion "latest"

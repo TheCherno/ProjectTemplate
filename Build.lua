@@ -8,10 +8,15 @@ workspace "New Project"
    filter "system:windows"
       buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
 
-OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
+OutputDir = "../../output/bin/%{cfg.architecture}/%{cfg.system}/%{cfg.buildcfg}"
+ObjDir = "../../output/obj/%{cfg.architecture}/%{cfg.system}/%{cfg.buildcfg}"
+CoresDir = "../../cores/"
+AppsDir = "../../apps/"
 
-group "Core"
-	include "Core/Build-Core.lua"
-group ""
+group "Cores"
+	include "cores/Core/Build-Core.lua"
 
-include "App/Build-App.lua"
+group "Apps"
+   include "apps/App/Build-App.lua"
+
+group "Dependencies"

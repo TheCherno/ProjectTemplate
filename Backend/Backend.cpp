@@ -1,7 +1,9 @@
 #include "Backend.h"
+
 #include "Settings.h"
 
 #include "MusicTypes.h"
+#include <FileManagment.h>
 
 #include "json\json.h"
 #include <fstream>
@@ -17,6 +19,7 @@
 #include <mmsystem.h>
 
 #include <SFML/Audio.hpp>
+
 
 namespace Backend {
 	Json::Value loadedDirectory;
@@ -83,7 +86,7 @@ namespace Backend {
 			currentSong.isPaused = false;
 		}
 		else if (action == "reload") {
-			reloadDirectory();
+			reloadDirectory(loadedDirectory);
 		}
 		else if (action == "list") {
 			Json::Value songs = loadedDirectory["songs"];
@@ -104,7 +107,7 @@ namespace Backend {
 	std::string exec(const char* cmd) {
 		char buffer[1024];
 		std::string result = "";
-		FILE* pipe = _popen(cmd, "r");
+		FILE* pipe = _popen((std::string(cmd) + " 2>&1").c_str(), "r");
 		if (!pipe) throw std::runtime_error("popen() failed!");
 
 		while (fgets(buffer, sizeof(buffer), pipe) != NULL) {
@@ -162,8 +165,14 @@ namespace Backend {
 			std::cout << "Song already downloaded! Aborting...\n";
 			return;
 		}
-
-		std::string storageLocation = convertToWav(filePath);
+		std::string storageLocation;
+		try {
+			storageLocation = convertToWav(filePath);
+		}
+		catch (const std::exception& e) {
+			std::cout << e.what() << std::endl;
+			return;
+		}
 
 		Song song;
 		song.storageLocation = storageLocation;
@@ -193,6 +202,7 @@ namespace Backend {
 		}
 		catch (const std::filesystem::filesystem_error& e) {
 			std::cerr << "Error: " << e.what() << std::endl;
+			return;
 		}
 
 
@@ -200,7 +210,7 @@ namespace Backend {
 			std::cout << "Song coulnt be added to directory, deleting may be required!\n";
 		}
 
-		reloadDirectory();
+		reloadDirectory(loadedDirectory);
 	}
 
 	int addToSongDirectory(Song song) {
@@ -240,21 +250,6 @@ namespace Backend {
 		return 1;
 	}
 
-	std::string convertToWav(std::string filePath) {
-
-		size_t dotPosition = filePath.find_last_of('.');
-
-		std::string fileNameWithoutExtension;
-
-		if (dotPosition != std::string::npos) {
-			fileNameWithoutExtension = filePath.substr(0, dotPosition);
-		}
-		
-		system(("ffmpeg -i \"" + filePath + "\" -vn \"" + fileNameWithoutExtension + ".wav\"").c_str());
-
-		return fileNameWithoutExtension + ".wav";
-	}
-
 	Song getSong(std::string songName) {
 		Song song;
 
@@ -271,18 +266,6 @@ namespace Backend {
 		}
 
 		return song;
-	}
-
-	void reloadDirectory() {
-		Json::Reader reader;
-
-		std::ifstream file("SongDirectory.json");
-
-		if (!reader.parse(file, loadedDirectory, true)) {
-			std::cout << "Something went wrong during loading" << "\n" << reader.getFormatedErrorMessages();
-		}
-
-		std::cout << "Reloaded song directory\n";
 	}
 
 	void playSong(std::string songName) {
@@ -317,7 +300,7 @@ namespace Backend {
 		std::cout << output;
 		//while (true) {}
 
-		if (output.find("cannot") != std::string::npos) {
+		if (output.find("not recognized") != std::string::npos || (output.find("cannot find the path specified") != std::string::npos)) {
 			std::cout << "FFMPEG not installed, downloading...";
 			const char* powershellScript = R"(
 			# PowerShell script content here

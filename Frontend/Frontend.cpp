@@ -4,11 +4,11 @@
 #include <sstream>
 
 #include "MusicTypes.h"
+#include <FileManagment.h>
 
 int main()
 {
-	//Backend::checkFFMPEGInstallation();
-	Backend::reloadDirectory();
+	Backend::checkFFMPEGInstallation();
 	std::string url;
 
 	Song currentSong;

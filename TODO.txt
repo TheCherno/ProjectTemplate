@@ -1,0 +1,2 @@
+Remove downloaded video from MusicLibrary if error ocurs
+Load song irectory at startup

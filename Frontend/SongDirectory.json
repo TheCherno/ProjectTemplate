@@ -1,0 +1,11 @@
+{
+   "songs" : {
+      "Crown" : {
+         "artist" : "LEC",
+         "hasLyricsAvailable" : false,
+         "sizeInBytes" : 2343904,
+         "songName" : "Crown",
+         "storageLocation" : "D:\\CPP\\Stealify\\Frontend\\MusicLibrary\\LEC - Crown.wav"
+      }
+   }
+}

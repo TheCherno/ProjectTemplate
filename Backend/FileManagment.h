@@ -14,6 +14,6 @@ enum SaveStrategy {
 
 std::string convertToAudio(std::string filePath, SaveStrategy strategy);
 void reloadDirectory(Json::Value& loadedDirectory);
-void removeSongFiles(std::string songPath);
-int addToSongDirectory(Song song);
+void removeSongFiles(std::string songPath, SaveStrategy strategy);
+int addToSongDirectory(Song song, SaveStrategy strategy);
 int convertWithFFMPEG(std::string fullPath, std::string pathWithoutExtension, std::string extension);

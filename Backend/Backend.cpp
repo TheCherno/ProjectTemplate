@@ -208,14 +208,14 @@ namespace Backend {
 		}
 		catch (const std::filesystem::filesystem_error& e) {
 			std::cerr << "Error: " << e.what() << std::endl;
-			removeSongFiles(song.storageLocation);
+			removeSongFiles(song.storageLocation, saveStrategy);
 			return;
 		}
 
 
-		if (!addToSongDirectory(song)) {
+		if (!addToSongDirectory(song, saveStrategy)) {
 			std::cout << "Song coulnt be added to directory, deleting may be required!\n";
-			removeSongFiles(song.storageLocation);
+			removeSongFiles(song.storageLocation, saveStrategy);
 		}
 
 		reloadDirectory(loadedDirectory);

@@ -57,14 +57,33 @@
 		return result;
 	}
 
-	//Song path in this case means the storage location without a file extension e.g:
-	//C://Frontend//MusicLibrary//TJ_Beastboy - Godzilla
-	void removeSongFiles(std::string songPath) {
+	//Warning:
+	//This method is only for removing files after a download abortion due to an error
+	//because it requires the current SaveStrategy it cant be used to delete already saved songs
+	void removeSongFiles(std::string songPath, SaveStrategy strategy) {
 		std::cout << "Removing song files..." << std::endl;
-		while(true) {}
+
+		std::string path;
+		size_t dotPosition = songPath.find_last_of(".");
+
+		if (dotPosition != std::string::npos && dotPosition != 0) {
+			path = songPath.substr(0,dotPosition);
+		}
+
+		std::string webmFile = "./MusicLibrary/" + path + ".webm";
+		std::string jpgFile = "./MusicLibrary/" + path + ".jpg";
+		std::string webpFile = "./MusicLibrary/" + path + ".webp";
+		std::string audioFile = "./MusicLibrary/" + path + (strategy == MP3 ? ".mp3" : ".wav");
+
+		std::cout << webmFile;
+
+		std::remove(webmFile.c_str());
+		std::remove(jpgFile.c_str());
+		std::remove(webpFile.c_str());
+		std::remove(audioFile.c_str());
 	}
 
-	int addToSongDirectory(Song song) {
+	int addToSongDirectory(Song song, SaveStrategy strategy) {
 		Json::Reader reader;
 		Json::StyledWriter writer;
 		Json::Value root;
@@ -73,7 +92,7 @@
 
 		if (!reader.parse(file, root, true)) {
 			std::cout << "Something went wrong during loading" << "\n" << reader.getFormatedErrorMessages();
-			removeSongFiles(song.storageLocation);
+			removeSongFiles(song.storageLocation, strategy);
 			return 0;
 		}
 

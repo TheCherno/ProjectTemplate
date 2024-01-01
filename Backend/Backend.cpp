@@ -240,6 +240,7 @@ namespace Backend {
 		}
 		else {
 			std::cout << "Couldn't find song in loaded dictionary\n";
+			if(m_debug) awaitEnter();
 			return song;
 		}
 
@@ -252,7 +253,7 @@ namespace Backend {
 		currentSong = getSong(songName);
 		currentSong.isPlaying = true;
 
-		std::string path = getSong(songName).storageLocation;
+		std::string path = currentSong.storageLocation;
 
 		if (!buffer.loadFromFile(path)) {
 			std::cerr << "Failed to load audio file." << std::endl;

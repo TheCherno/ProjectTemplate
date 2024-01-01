@@ -101,6 +101,7 @@ namespace Backend {
 			int count = 1;
 			for (const auto& song : songs.getMemberNames()) {
 				std::string songName = songs[song]["songName"].asString();
+				if (songName == "") { continue; }
 				std::cout << count << ".    " << songName << std::endl;
 				count++;
 			}

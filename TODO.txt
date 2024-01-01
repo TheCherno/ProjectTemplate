@@ -1,11 +1,15 @@
-WORKING ON - Remove downloaded video from MusicLibrary if error ocurs
-Fix sometimes empty song occurs when listing songs (happens when accessing the songPath and the song doesnt exist) check for null in listing?
+VERSION 1.0
+
+WORKING ON - Convert all song names to lowercase so its not case sensitive
 
 IMPORTANT ---
 Remove weird characters from song names before saving in dictionary
 Remove weird characters from file names before saving (maybe only remove from wav and then delete webm to save storage)
 Fix playing song after previous song plays prevoious song
+Add Playlists
 
 DONE ---
 Take song name with spaces into account when play command
 Load song directory at startup
+Remove downloaded video from MusicLibrary if error ocurs
+Fix sometimes empty song occurs when listing songs (happens when accessing the songPath and the song doesnt exist) check for null in listing?

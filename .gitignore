@@ -3,8 +3,6 @@
 Binaries/
 
 ./Frontend/MusicLibrary
-./Frontend/SongDirectory.json
-
 *.webm
 *.wav
 *.webp
@@ -23,4 +21,4 @@ Makefile
 # Exclude
 !Vendor/Binaries
 Frontend/SongDirectory.json
-Frontend/SongDirectory.json
+*.mp3

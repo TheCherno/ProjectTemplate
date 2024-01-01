@@ -30,6 +30,7 @@ namespace Backend {
 	sf::SoundBuffer buffer;
 	sf::Sound sound;
 
+	SaveStrategy saveStrategy = MP3;
 	bool m_debug;
 
 	void initializeApplication(bool debug) {
@@ -175,7 +176,7 @@ namespace Backend {
 		}
 		std::string storageLocation;
 		try {
-			storageLocation = convertToWav(filePath);
+			storageLocation = convertToAudio(filePath, saveStrategy);
 		}
 		catch (const std::exception& e) {
 			std::cout << e.what() << std::endl;

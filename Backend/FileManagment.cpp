@@ -23,7 +23,7 @@
 
 	}
 
-	std::string convertToWav(std::string filePath) {
+	std::string convertToAudio(std::string filePath, SaveStrategy strategy) {
 
 		size_t dotPosition = filePath.find_last_of('.');
 
@@ -33,14 +33,28 @@
 			fileNameWithoutExtension = filePath.substr(0, dotPosition);
 		}
 
-		int result = system(("ffmpeg -i \"" + filePath + "\" -vn \"" + fileNameWithoutExtension + ".wav\"").c_str());
+		if (strategy == WAV) {
+			if (convertWithFFMPEG(filePath, fileNameWithoutExtension, ".wav") == 0) {
+				return fileNameWithoutExtension + ".wav";
+			}
+			else {
+				throw std::runtime_error("Error converting to .wav");
+			}
+		}
+		else if (strategy == MP3) {
+			if (convertWithFFMPEG(filePath, fileNameWithoutExtension, ".mp3") == 0) {
+				return fileNameWithoutExtension + ".mp3";
+			}
+			else {
+				throw std::runtime_error("Error converting to .mp3");
+			}
+		}
+	}
 
-		if (result == 0) {
-			return fileNameWithoutExtension + ".wav";
-		}
-		else {
-			throw std::runtime_error("Error converting to .wav");
-		}
+	int convertWithFFMPEG(std::string fullPath, std::string pathWithoutExtension, std::string extension) {
+		int result = system(("ffmpeg -i \"" + fullPath + "\" -vn \"" + pathWithoutExtension + extension + "\"").c_str());
+
+		return result;
 	}
 
 	//Song path in this case means the storage location without a file extension e.g:

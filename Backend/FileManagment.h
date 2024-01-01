@@ -7,7 +7,13 @@
 #include <stdexcept>
 #include "MusicTypes.h"
 
-std::string convertToWav(std::string filePath);
+enum SaveStrategy {
+	MP3,
+	WAV
+};
+
+std::string convertToAudio(std::string filePath, SaveStrategy strategy);
 void reloadDirectory(Json::Value& loadedDirectory);
 void removeSongFiles(std::string songPath);
 int addToSongDirectory(Song song);
+int convertWithFFMPEG(std::string fullPath, std::string pathWithoutExtension, std::string extension);

@@ -42,3 +42,47 @@
 			throw std::runtime_error("Error converting to .wav");
 		}
 	}
+
+	//Song path in this case means the storage location without a file extension e.g:
+	//C://Frontend//MusicLibrary//TJ_Beastboy - Godzilla
+	void removeSongFiles(std::string songPath) {
+		std::cout << "Removing song files..." << std::endl;
+		while(true) {}
+	}
+
+	int addToSongDirectory(Song song) {
+		Json::Reader reader;
+		Json::StyledWriter writer;
+		Json::Value root;
+
+		std::ifstream file("SongDirectory.json");
+
+		if (!reader.parse(file, root, true)) {
+			std::cout << "Something went wrong during loading" << "\n" << reader.getFormatedErrorMessages();
+			removeSongFiles(song.storageLocation);
+			return 0;
+		}
+
+		file.close();
+
+		//std::cout << root;
+
+		//Json::Value songs = root["songs"];
+
+		if (root["songs"][song.songName].isNull()) {
+			root["songs"][song.songName]["songName"] = song.songName;
+			root["songs"][song.songName]["storageLocation"] = song.storageLocation;
+			root["songs"][song.songName]["artist"] = song.artist;
+			root["songs"][song.songName]["sizeInBytes"] = song.sizeInBytes;
+			root["songs"][song.songName]["hasLyricsAvailable"] = song.hasLyricsAvailable;
+
+			std::ofstream newFile("SongDirectory.json");
+
+			newFile << writer.write(root);
+
+			newFile.close();
+		}
+		else { std::cout << "Song already exists!\n"; }
+
+		return 1;
+	}

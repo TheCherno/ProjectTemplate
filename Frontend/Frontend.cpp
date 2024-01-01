@@ -1,14 +1,19 @@
 #include "Backend.h"
 #include <string>
 #include <Windows.h>
-#include <sstream>
 
 #include "MusicTypes.h"
 #include <FileManagment.h>
+#include <iostream>
+#include<sstream>
 
 int main()
 {
-	Backend::checkFFMPEGInstallation();
+	std::string debug = "false";
+	std::cout << "Enable debug print? false or true\n";
+	std::getline(std::cin , debug);
+
+	Backend::initializeApplication(debug == "true");
 	std::string url;
 
 	Song currentSong;

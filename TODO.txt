@@ -1,2 +1,11 @@
-Remove downloaded video from MusicLibrary if error ocurs
-Load song irectory at startup
+WORKING ON - Remove downloaded video from MusicLibrary if error ocurs
+Fix sometimes empty song occurs when listing songs (happens when accessing the songPath and the song doesnt exist) check for null in listing?
+
+IMPORTANT ---
+Remove weird characters from song names before saving in dictionary
+Remove weird characters from file names before saving (maybe only remove from wav and then delete webm to save storage)
+Fix playing song after previous song plays prevoious song
+
+DONE ---
+Take song name with spaces into account when play command
+Load song directory at startup

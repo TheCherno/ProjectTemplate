@@ -8,7 +8,6 @@
 #include "json\json.h"
 #include <fstream>
 
-#include <algorithm>
 #include <cstdio>
 #include <iostream>
 #include <memory>
@@ -30,6 +29,15 @@ namespace Backend {
 
 	sf::SoundBuffer buffer;
 	sf::Sound sound;
+
+	bool m_debug;
+
+	void initializeApplication(bool debug) {
+		m_debug = debug;
+
+		checkFFMPEGInstallation();
+		reloadDirectory(loadedDirectory);
+	}
 
 	void printAndHandleInput() {
 		system("cls");
@@ -62,7 +70,7 @@ namespace Backend {
 		}
 		else if (action == "play") {
 			std::string songName;
-			iss >> songName;
+			std::getline(iss >> std::ws, songName);
 			Backend::playSong(songName);
 		}
 		else if (action == "volume") {
@@ -73,6 +81,7 @@ namespace Backend {
 			else {
 				float currentVolume = sound.getVolume();
 				std::cout << "Current volume set to " << currentVolume << std::endl;
+				awaitEnter();
 			}
 		}
 		else if (action == "pause") {
@@ -96,12 +105,16 @@ namespace Backend {
 				std::cout << count << ".    " << songName << std::endl;
 				count++;
 			}
+			awaitEnter();
 		}
+
+		system("cls");
+	}
+
+	void awaitEnter() {
 		std::cout << "Press enter to continue";
 		std::string dummy;
 		std::getline(std::cin, dummy);
-
-		system("cls");
 	}
 
 	std::string exec(const char* cmd) {
@@ -177,7 +190,7 @@ namespace Backend {
 		Song song;
 		song.storageLocation = storageLocation;
 
-		std::cout << song.storageLocation;
+		if (m_debug) { std::cout << song.storageLocation; awaitEnter();}
 
 		std::string songName;
 
@@ -202,52 +215,17 @@ namespace Backend {
 		}
 		catch (const std::filesystem::filesystem_error& e) {
 			std::cerr << "Error: " << e.what() << std::endl;
+			removeSongFiles(song.storageLocation);
 			return;
 		}
 
 
 		if (!addToSongDirectory(song)) {
 			std::cout << "Song coulnt be added to directory, deleting may be required!\n";
+			removeSongFiles(song.storageLocation);
 		}
 
 		reloadDirectory(loadedDirectory);
-	}
-
-	int addToSongDirectory(Song song) {
-		Json::Reader reader;
-		Json::StyledWriter writer;
-		Json::Value root;
-
-		std::ifstream file("SongDirectory.json");
-
-		if (!reader.parse(file, root, true)) {
-			std::cout << "Something went wrong during loading" << "\n" << reader.getFormatedErrorMessages();
-			return 0;
-		}
-
-		file.close();
-
-		//std::cout << root;
-
-		//Json::Value songs = root["songs"];
-
-		if (root["songs"][song.songName].isNull()) {
-
-			root["songs"][song.songName]["songName"] = song.songName;
-			root["songs"][song.songName]["storageLocation"] = song.storageLocation;
-			root["songs"][song.songName]["artist"] = song.artist;
-			root["songs"][song.songName]["sizeInBytes"] = song.sizeInBytes;
-			root["songs"][song.songName]["hasLyricsAvailable"] = song.hasLyricsAvailable;
-
-			std::ofstream newFile("SongDirectory.json");
-
-			newFile << writer.write(root);
-
-			newFile.close();
-		}
-		else { std::cout << "Song already exists!\n"; }
-
-		return 1;
 	}
 
 	Song getSong(std::string songName) {
@@ -298,9 +276,11 @@ namespace Backend {
 		std::string output = exec("C:\\FFmpeg\\ffmpeg\\bin\\ffmpeg.exe");
 
 		std::cout << output;
+		
+		if(m_debug) awaitEnter();
 		//while (true) {}
 
-		if (output.find("not recognized") != std::string::npos || (output.find("cannot find the path specified") != std::string::npos)) {
+		if (output.find("not recognized") != std::string::npos || (output.find("cannot find the path specified") != std::string::npos) || (output.find("kann den angegebenen Pfad nicht finden") != std::string::npos)) {
 			std::cout << "FFMPEG not installed, downloading...";
 			const char* powershellScript = R"(
 			# PowerShell script content here
@@ -336,6 +316,7 @@ namespace Backend {
 
 			std::string output = exec("powershell.exe -ExecutionPolicy Bypass -File ./install_ffmpeg.ps1 -Verb RunAs");
 			std::cout << output;
+			if (m_debug) awaitEnter();
 			remove("install_ffmpeg.ps1");
 
 			std::cout << std::endl;

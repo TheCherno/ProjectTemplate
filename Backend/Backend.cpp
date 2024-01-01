@@ -61,8 +61,6 @@ namespace Backend {
 		std::istringstream iss(userInput);
 		iss >> action;
 
-		//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
 		if (action == "download") {
 			std::string url;
 			iss >> url;
@@ -143,8 +141,6 @@ namespace Backend {
 
 			size_t position = output.find("[download] Destination: ");
 
-			//std::cout << output;
-
 			if (position != std::string::npos) {
 				std::string filename = output.substr(position + strlen("[download] Destination: "));
 
@@ -154,7 +150,6 @@ namespace Backend {
 				if (pos != std::string::npos) {
 					// Extract the substring up to the position of ".webm"
 					std::string result = filename.substr(0, pos + 5); // +5 to include ".webm"
-					//std::cout << "Modified file path: " << result << std::endl;
 					return result;
 				}
 				else {
@@ -194,8 +189,6 @@ namespace Backend {
 
 		std::string songName;
 
-		//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
 		std::cout << "\nEnter the name of the song: \n";
 		
 		std::getline(std::cin, songName);
@@ -210,7 +203,6 @@ namespace Backend {
 
 		try {
 			std::uintmax_t fileSize = std::filesystem::file_size(filePath);
-			//std::cout << fileSize;
 			song.sizeInBytes = fileSize;
 		}
 		catch (const std::filesystem::filesystem_error& e) {
@@ -248,8 +240,6 @@ namespace Backend {
 	}
 
 	void playSong(std::string songName) {
-		//const wchar_t* filePath = L"D:\CPP\Stealify\Frontend\MusicLibrary\TJ_beastboy & Mary Man - Modus.wav";
-
 		currentSong = getSong(songName);
 		currentSong.isPlaying = true;
 
@@ -264,7 +254,6 @@ namespace Backend {
 		sound.play();
 
 		while (sound.getStatus() == sf::Sound::Playing) {
-			// Update or perform other tasks while the audio is playing
 			printAndHandleInput();
 		}
 	}
@@ -276,10 +265,7 @@ namespace Backend {
 	void checkFFMPEGInstallation() {
 		std::string output = exec("C:\\FFmpeg\\ffmpeg\\bin\\ffmpeg.exe");
 
-		std::cout << output;
-		
-		if(m_debug) awaitEnter();
-		//while (true) {}
+		if (m_debug) { std::cout << output; awaitEnter(); }
 
 		if (output.find("not recognized") != std::string::npos || (output.find("cannot find the path specified") != std::string::npos) || (output.find("kann den angegebenen Pfad nicht finden") != std::string::npos)) {
 			std::cout << "FFMPEG not installed, downloading...";

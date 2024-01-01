@@ -70,6 +70,10 @@ namespace Backend {
 		else if (action == "play") {
 			std::string songName;
 			std::getline(iss >> std::ws, songName);
+			std::transform(songName.begin(), songName.end(), songName.begin(), [](unsigned char c) {
+				return std::tolower(c);
+				});
+			if (m_debug) std::cout << "Playing " + songName << std::endl;
 			Backend::playSong(songName);
 		}
 		else if (action == "volume") {

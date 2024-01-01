@@ -102,7 +102,11 @@
 
 		//Json::Value songs = root["songs"];
 
-		if (root["songs"][song.songName].isNull()) {
+		std::transform(song.songName.begin(), song.songName.end(), song.songName.begin(), [](unsigned char c) {
+			return std::tolower(c);
+			});
+
+		if(root["songs"][song.songName].isNull()) {
 			root["songs"][song.songName]["songName"] = song.songName;
 			root["songs"][song.songName]["storageLocation"] = song.storageLocation;
 			root["songs"][song.songName]["artist"] = song.artist;

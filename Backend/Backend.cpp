@@ -319,8 +319,8 @@ namespace Backend {
 	}
 
 	Playlist getPlaylist(std::string playlistName) {
-		std::cout << "checking if " << playlistName;
-		awaitEnter();
+		//std::cout << "checking if " << playlistName;
+		//awaitEnter();
 		auto it = std::find_if(playlists.begin(), playlists.end(), [&playlistName](const Playlist& playlist) {
 			return playlist.name == playlistName;
 		});

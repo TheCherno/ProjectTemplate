@@ -5,6 +5,8 @@
 #include "MusicTypes.h"
 #include <FileManagment.h>
 
+#include <thread>
+
 #include "json\json.h"
 #include <fstream>
 
@@ -25,6 +27,8 @@ namespace Backend {
 	Song currentSong;
 	Playlist currentPlaylist;
 	std::vector<Playlist> playlists;
+	
+	bool playingPlaylist = false;
 
 	std::string action;
 	std::string userInput;
@@ -40,10 +44,19 @@ namespace Backend {
 
 		checkFFMPEGInstallation();
 		reloadDirectory(loadedDirectory, playlists);
+		std::cout << "current playlists are " << playlists.at(1).name;
+		awaitEnter();
 	}
 
 	void printAndHandleInput() {
+
 		system("cls");
+
+		if (sound.getStatus() == sf::Sound::Stopped) {
+			std::cout << "Sound has ended.";
+			currentSong.isPlaying = false;
+		}
+
 		std::cout << "Currently playing: " + currentSong.songName + "\n";
 		std::cout << "------------" << (currentSong.isPlaying ? "Playing" : "Paused") << "------------" << std::endl << std::endl;
 		
@@ -79,11 +92,17 @@ namespace Backend {
 			std::string songName;
 			std::getline(iss >> std::ws, songName);
 			if (getPlaylist(songName).name == Playlist().name) {
+				playingPlaylist = false;
 				std::transform(songName.begin(), songName.end(), songName.begin(), [](unsigned char c) {
 					return std::tolower(c);
 					});
 				if (m_debug) std::cout << "Playing " + songName << std::endl;
 				Backend::playSong(songName);
+			}
+			else {
+				currentPlaylist = getPlaylist(songName);
+				playingPlaylist = true;
+				playSong(currentPlaylist.songs.at(0));
 			}
 		}
 		else if (action == "volume") {
@@ -313,11 +332,32 @@ namespace Backend {
 
 		sound.sf::Sound::setBuffer(buffer);
 
-		sound.play();
+		std::thread playbackThread([&]() {
+			sound.play();
+			while (sound.getStatus() == sf::Sound::Playing) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			}
+			currentSong.isPlaying = false;
+			if (playingPlaylist) {
+				currentPlaylist.songIndex += 1;
+				if (currentPlaylist.songIndex < currentPlaylist.songs.size()) {
+					Song nextSong;
+					nextSong = getNextSongFromPlaylist();
+					playSong(nextSong.songName);
+				}
+			}
+		});
 
-		while (sound.getStatus() == sf::Sound::Playing) {
+		while (currentSong.isPlaying) {
 			printAndHandleInput();
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
+
+		playbackThread.join();
+	}
+
+	Song getNextSongFromPlaylist() {
+		return getSong(currentPlaylist.songs.at(currentPlaylist.songIndex));
 	}
 
 	void setVolume(int volume) {

@@ -23,7 +23,7 @@
 
 	}
 
-	std::string convertToAudio(std::string filePath, SaveStrategy strategy) {
+	std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::string songName) {
 
 		size_t dotPosition = filePath.find_last_of('.');
 
@@ -31,19 +31,20 @@
 
 		if (dotPosition != std::string::npos) {
 			fileNameWithoutExtension = filePath.substr(0, dotPosition);
+			fileNameWithoutExtension = sanitizeFileName(fileNameWithoutExtension);
 		}
 
 		if (strategy == WAV) {
-			if (convertWithFFMPEG(filePath, fileNameWithoutExtension, ".wav") == 0) {
-				return fileNameWithoutExtension + ".wav";
+			if (convertWithFFMPEG(filePath, "MusicLibrary/" + songName, ".wav") == 0) {
+				return "./MusicLibrary/" + songName + ".wav";
 			}
 			else {
 				throw std::runtime_error("Error converting to .wav");
 			}
 		}
 		else if (strategy == MP3) {
-			if (convertWithFFMPEG(filePath, fileNameWithoutExtension, ".mp3") == 0) {
-				return fileNameWithoutExtension + ".mp3";
+			if (convertWithFFMPEG(filePath, "MusicLibrary/" + songName, ".mp3") == 0) {
+				return "./MusicLibrary/" + songName + ".mp3";
 			}
 			else {
 				throw std::runtime_error("Error converting to .mp3");
@@ -82,6 +83,21 @@
 		std::remove(webpFile.c_str());
 		std::remove(audioFile.c_str());
 	}
+
+	std::string sanitizeFileName(const std::string& input) {
+		std::string sanitized;
+		for (char c : input) {
+			if (std::isalnum(c) || c == ' ' || c == '-' || c == '_' || c == '\\' || c == '/') {
+				sanitized += c;
+			}
+			else if (c == '.') {
+				// Allow dots in the filename (extension separator)
+				sanitized += c;
+			}
+		}
+		return sanitized;
+	}
+
 
 	int addToSongDirectory(Song song, SaveStrategy strategy) {
 		Json::Reader reader;

@@ -141,6 +141,8 @@ namespace Backend {
 
 		std::string output = exec(cmd.c_str());
 
+		if (m_debug) { std::cout << output; awaitEnter(); }
+
 		size_t positionDownloaded = output.find("has already been downloaded");
 
 		if (positionDownloaded == std::string::npos) {
@@ -173,39 +175,42 @@ namespace Backend {
 	}
 
 	void addSong(std::string url) {
-		std::string filePath = downloadSong(url);
-
-		if (filePath == "-1") {
-			std::cout << "Song already downloaded! Aborting...\n";
-			return;
-		}
-		std::string storageLocation;
-		try {
-			storageLocation = convertToAudio(filePath, saveStrategy);
-		}
-		catch (const std::exception& e) {
-			std::cout << e.what() << std::endl;
-			return;
-		}
-
 		Song song;
-		song.storageLocation = storageLocation;
 
-		if (m_debug) { std::cout << song.storageLocation; awaitEnter();}
+		std::string filePath = downloadSong(url);
 
 		std::string songName;
 
 		std::cout << "\nEnter the name of the song: \n";
-		
+
 		std::getline(std::cin, songName);
-	
+
 		song.songName = songName;
-		
+
 		std::string artist;
 
 		std::cout << "Enter the artist: \n";
 		std::getline(std::cin, artist);
 		song.artist = artist;
+
+		if (filePath == "-1") {
+			std::cout << "Song already downloaded! Aborting...\n";
+			awaitEnter();
+			return;
+		}
+		std::string storageLocation;
+		try {
+			storageLocation = convertToAudio(filePath, saveStrategy, songName);
+		}
+		catch (const std::exception& e) {
+			std::cout << e.what() << std::endl;
+			awaitEnter();
+			return;
+		}
+
+		song.storageLocation = storageLocation;
+
+		if (m_debug) { std::cout << song.storageLocation; awaitEnter();}
 
 		try {
 			std::uintmax_t fileSize = std::filesystem::file_size(filePath);

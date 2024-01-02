@@ -1,10 +1,8 @@
 VERSION 1.0
 
-WORKING ON - Removing weird characters
+WORKING ON - Add Playlists
 
 IMPORTANT ---
-Fix playing song after previous song plays prevoious song
-Add Playlists
 
 DONE ---
 Take song name with spaces into account when play command
@@ -12,3 +10,4 @@ Load song directory at startup
 Remove downloaded video from MusicLibrary if error ocurs
 Fix sometimes empty song occurs when listing songs (happens when accessing the songPath and the song doesnt exist) check for null in listing?
 Convert all song names to lowercase so its not case sensitive
+Removing weird characters

@@ -12,6 +12,7 @@ namespace Backend {
 	void printAndHandleInput();
 	void setVolume(int volume);
 	void checkFFMPEGInstallation();
+	Playlist getPlaylist(std::string playlistName);
 
 	void awaitEnter();
 

@@ -1,8 +1,12 @@
 VERSION 1.0
 
-WORKING ON - Add Playlists
+WORKING ON - Save playlist in JSON (maybe in song directory with other root eg. "playlists")
 
-IMPORTANT ---
+IMPORTANT --- 
+list all playlists
+Add song into playlist
+play playlist
+QoL: Let user add to playlist after downloading song
 
 DONE ---
 Take song name with spaces into account when play command
@@ -11,3 +15,6 @@ Remove downloaded video from MusicLibrary if error ocurs
 Fix sometimes empty song occurs when listing songs (happens when accessing the songPath and the song doesnt exist) check for null in listing?
 Convert all song names to lowercase so its not case sensitive
 Removing weird characters
+
+PLAYLIST UPDATE ---
+Load playlists into loadedDirectory

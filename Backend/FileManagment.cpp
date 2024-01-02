@@ -1,6 +1,6 @@
 #include "FileManagment.h"
 
-	void reloadDirectory(Json::Value& loadedDirectory) {
+	void reloadDirectory(Json::Value& loadedDirectory, std::vector<Playlist>& playlists) {
 		Json::Reader reader;
 
 		if (std::filesystem::exists("SongDirectory.json")) {
@@ -9,7 +9,25 @@
 			if (!reader.parse(file, loadedDirectory, true)) {
 				std::cout << "Something went wrong during loading" << "\n" << reader.getFormatedErrorMessages();
 			}
+			
+			const Json::Value& playlistsArray = loadedDirectory["playlists"];
 
+			if (playlistsArray != "") {
+				for (const auto& playlistJson : playlistsArray) {
+					Playlist playlist;
+
+					playlist.name = playlistJson["name"].asString();
+					playlist.creationDate = playlistJson["creationDate"].asString();
+
+					const Json::Value& songsArray = playlistJson["songs"];
+					for (const auto& songJson : songsArray) {
+						playlist.songs.push_back(songJson.asString());
+					}
+					playlists.push_back(playlist);
+				}
+			}
+
+			//std::cout << playlists << std::endl; 
 			std::cout << "Reloaded song directory\n";
 		}
 		else {
@@ -18,7 +36,7 @@
 				outputFile << "{}";
 				outputFile.close();
 			}
-			reloadDirectory(loadedDirectory);
+			reloadDirectory(loadedDirectory, playlists);
 		}
 
 	}
@@ -98,6 +116,35 @@
 		return sanitized;
 	}
 
+	int addToPlaylistDirectory(Playlist playlist) {
+		Json::Reader reader;
+		Json::StyledWriter writer;
+		Json::Value root;
+
+		std::ifstream file("SongDirectory.json");
+
+		if (!reader.parse(file, root, true)) {
+			std::cout << "Something went wrong during loading\n" << reader.getFormatedErrorMessages();
+			return 0;
+		}
+
+		file.close();
+
+		Json::Value songsArray;
+		for (const auto& song : playlist.songs) {
+			songsArray.append(song);
+		}
+
+		root["playlists"][playlist.name]["name"] = playlist.name;
+		root["playlists"][playlist.name]["songs"] = songsArray;
+		root["playlists"][playlist.name]["creationDate"] = playlist.creationDate;
+
+		std::ofstream newFile("SongDirectory.json");
+
+		newFile << writer.write(root);
+
+		newFile.close();
+	}
 
 	int addToSongDirectory(Song song, SaveStrategy strategy) {
 		Json::Reader reader;

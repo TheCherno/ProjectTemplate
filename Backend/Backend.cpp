@@ -23,6 +23,8 @@
 namespace Backend {
 	Json::Value loadedDirectory;
 	Song currentSong;
+	Playlist currentPlaylist;
+	std::vector<Playlist> playlists;
 
 	std::string action;
 	std::string userInput;
@@ -37,7 +39,7 @@ namespace Backend {
 		m_debug = debug;
 
 		checkFFMPEGInstallation();
-		reloadDirectory(loadedDirectory);
+		reloadDirectory(loadedDirectory, playlists);
 	}
 
 	void printAndHandleInput() {
@@ -50,6 +52,12 @@ namespace Backend {
 		std::cout << "Type volume <number between 0-100> to set the volume" << std::endl;
 		std::cout << "Type pause to pause the song" << std::endl;
 		std::cout << "Type resume to resume the song" << std::endl;
+
+		std::cout << std::endl;
+
+		std::cout << "Type playlist add <playlistName> <songName> to add a song to a playlist" << std::endl;
+		std::cout << "Type playlists to view all available playlists" << std::endl;
+		std::cout << "Type play <playlistName> to play a playlist" << std::endl;
 
 		std::cout << std::endl;
 
@@ -70,11 +78,13 @@ namespace Backend {
 		else if (action == "play") {
 			std::string songName;
 			std::getline(iss >> std::ws, songName);
-			std::transform(songName.begin(), songName.end(), songName.begin(), [](unsigned char c) {
-				return std::tolower(c);
-				});
-			if (m_debug) std::cout << "Playing " + songName << std::endl;
-			Backend::playSong(songName);
+			if (getPlaylist(songName).name == Playlist().name) {
+				std::transform(songName.begin(), songName.end(), songName.begin(), [](unsigned char c) {
+					return std::tolower(c);
+					});
+				if (m_debug) std::cout << "Playing " + songName << std::endl;
+				Backend::playSong(songName);
+			}
 		}
 		else if (action == "volume") {
 			int volume;
@@ -98,7 +108,7 @@ namespace Backend {
 			currentSong.isPaused = false;
 		}
 		else if (action == "reload") {
-			reloadDirectory(loadedDirectory);
+			reloadDirectory(loadedDirectory, playlists);
 		}
 		else if (action == "list") {
 			Json::Value songs = loadedDirectory["songs"];
@@ -110,6 +120,34 @@ namespace Backend {
 				count++;
 			}
 			awaitEnter();
+		}
+		else if (action == "playlist") {
+			std::string secondAction;
+			iss >> secondAction;
+
+			if (secondAction == "add") {
+				std::string playlistName;
+				iss >> playlistName;
+				std::string songName;
+				std::getline(iss >> std::ws, songName);
+				Playlist playlist = getPlaylist(playlistName);
+				if (playlist.name == "") {
+					std::cout << "No playlist found named " << playlistName << ". Do you want to create it? Yes/No" << std::endl;
+					std::string choice;
+					std::getline(std::cin, choice);
+					if (choice == "Yes" || choice == "yes" || choice == "y") {
+						playlist = Playlist();
+						playlist.name = playlistName;
+					}
+					else {
+						return;
+					}
+				}
+				playlist.songs.push_back(songName);
+				addToPlaylistDirectory(playlist);
+				std::cout << "Added " << songName << " to " << playlistName << std::endl;
+				awaitEnter();
+			}
 		}
 
 		system("cls");
@@ -228,7 +266,7 @@ namespace Backend {
 			removeSongFiles(song.storageLocation, saveStrategy);
 		}
 
-		reloadDirectory(loadedDirectory);
+		reloadDirectory(loadedDirectory, playlists);
 	}
 
 	Song getSong(std::string songName) {
@@ -248,6 +286,19 @@ namespace Backend {
 		}
 
 		return song;
+	}
+
+	Playlist getPlaylist(std::string playlistName) {
+		auto it = std::find_if(playlists.begin(), playlists.end(), [&playlistName](const Playlist& playlist) {
+			return playlist.name == playlistName;
+		});
+
+		if (it != playlists.end()) {
+			return *it;
+		}
+		else {
+			return Playlist();
+		}
 	}
 
 	void playSong(std::string songName) {

@@ -354,10 +354,10 @@ namespace Backend {
 			}
 		});
 
-		while (currentSong.isPlaying) {
+		/*while (currentSong.isPlaying) {
 			printAndHandleInput();
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		}
+		}*/
 
 		playbackThread.join();
 	}

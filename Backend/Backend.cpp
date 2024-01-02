@@ -140,10 +140,19 @@ namespace Backend {
 		else if (action == "playlist") {
 			std::string secondAction;
 			iss >> secondAction;
-
+			if (secondAction == "") {
+				std::cout << "Please specify a action" << std::endl;
+				awaitEnter();
+				return;
+			}
 			if (secondAction == "add") {
 				std::string playlistName;
 				iss >> playlistName;
+				if (playlistName == "" || (getPlaylist(playlistName).name == "")) {
+					std::cout << "usage: playlist add <playlistName> <songName>" << std::endl;
+					awaitEnter();
+					return;
+				}
 				std::string songName;
 				std::getline(iss >> std::ws, songName);
 				std::transform(songName.begin(), songName.end(), songName.begin(), [](unsigned char c) {
@@ -170,6 +179,7 @@ namespace Backend {
 			}
 		}
 
+		action = "";
 		system("cls");
 	}
 
@@ -350,6 +360,7 @@ namespace Backend {
 				}
 				else {
 					currentPlaylist.songIndex = 0;
+					playingPlaylist = false;
 				}
 			}
 		});

@@ -44,8 +44,6 @@ namespace Backend {
 
 		checkFFMPEGInstallation();
 		reloadDirectory(loadedDirectory, playlists);
-		std::cout << "current playlists are " << playlists.at(1).name;
-		awaitEnter();
 	}
 
 	void printAndHandleInput() {
@@ -164,6 +162,7 @@ namespace Backend {
 				}
 				playlist.songs.push_back(songName);
 				addToPlaylistDirectory(playlist);
+				reloadDirectory(loadedDirectory, playlists);
 				std::cout << "Added " << songName << " to " << playlistName << std::endl;
 				awaitEnter();
 			}
@@ -308,6 +307,8 @@ namespace Backend {
 	}
 
 	Playlist getPlaylist(std::string playlistName) {
+		std::cout << "checking if " << playlistName;
+		awaitEnter();
 		auto it = std::find_if(playlists.begin(), playlists.end(), [&playlistName](const Playlist& playlist) {
 			return playlist.name == playlistName;
 		});
@@ -344,6 +345,9 @@ namespace Backend {
 					Song nextSong;
 					nextSong = getNextSongFromPlaylist();
 					playSong(nextSong.songName);
+				}
+				else {
+					currentPlaylist.songIndex = 0;
 				}
 			}
 		});

@@ -124,6 +124,7 @@ namespace Backend {
 			currentSong.isPaused = false;
 		}
 		else if (action == "reload") {
+			checkFFMPEGInstallation();
 			reloadDirectory(loadedDirectory, playlists);
 		}
 		else if (action == "list") {
@@ -148,7 +149,7 @@ namespace Backend {
 			if (secondAction == "add") {
 				std::string playlistName;
 				iss >> playlistName;
-				if (playlistName == "" || (getPlaylist(playlistName).name == "")) {
+				if (playlistName == "") {
 					std::cout << "usage: playlist add <playlistName> <songName>" << std::endl;
 					awaitEnter();
 					return;
@@ -382,7 +383,7 @@ namespace Backend {
 	}
 
 	void checkFFMPEGInstallation() {
-		std::string output = exec("C:\\FFmpeg\\ffmpeg\\bin\\ffmpeg.exe");
+		std::string output = exec("ffmpeg");
 
 		if (m_debug) { std::cout << output; awaitEnter(); }
 

@@ -3,6 +3,8 @@ VERSION 1.0
 WORKING ON - Save playlist in JSON (maybe in song directory with other root eg. "playlists")
 
 IMPORTANT --- 
+Add öüä to sanitazion
+Memory Leak in audio thread?
 list all playlists
 Add song into playlist
 play playlist

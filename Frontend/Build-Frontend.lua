@@ -1,46 +1,22 @@
 project "Frontend"
-   kind "ConsoleApp"
-   language "C++"
-   cppdialect "C++20"
-   targetdir "Binaries/%{cfg.buildcfg}"
-   staticruntime "off"
+   kind "WindowedApp"
+   language "C#"
+   files { "*.cs", "*.xaml", "*.xaml.cs" }
+   links { "System", "WindowsBase", "PresentationCore", "PresentationFramework", "System.Xaml", "System.Data", "Backend" }
 
-   files { "./**.h", "./**.cpp" }
-
-   includedirs
-   {
-      "./",
-
-	  -- Include Core
-	  "../Backend/"
-   }
-
-   links
-   {
-      "Backend",
-      "jsoncpp"
-   }
-
-   targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
-
-   filter "system:windows"
-       systemversion "latest"
-       defines { "WINDOWS" }
+   targetdir ("../Binaries/" .. OutputDir .. "/Stealify")
+   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/Stealify")
 
    filter "configurations:Debug"
        defines { "DEBUG" }
-       runtime "Debug"
        symbols "On"
 
    filter "configurations:Release"
        defines { "RELEASE" }
-       runtime "Release"
        optimize "On"
        symbols "On"
 
    filter "configurations:Dist"
        defines { "DIST" }
-       runtime "Release"
        optimize "On"
        symbols "Off"

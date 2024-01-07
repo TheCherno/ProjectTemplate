@@ -1,0 +1,12 @@
+D:\CPP\Stealify\Frontend\bin\Release\Frontend.exe
+D:\CPP\Stealify\Frontend\bin\Release\Frontend.pdb
+D:\CPP\Stealify\Frontend\obj\Release\Frontend.csproj.AssemblyReference.cache
+D:\CPP\Stealify\Frontend\obj\Release\MainWindow.g.cs
+D:\CPP\Stealify\Frontend\obj\Release\App.g.cs
+D:\CPP\Stealify\Frontend\obj\Release\Frontend_MarkupCompile.cache
+D:\CPP\Stealify\Frontend\obj\Release\Frontend_MarkupCompile.lref
+D:\CPP\Stealify\Frontend\obj\Release\MainWindow.baml
+D:\CPP\Stealify\Frontend\obj\Release\Frontend.g.resources
+D:\CPP\Stealify\Frontend\obj\Release\Frontend.csproj.CoreCompileInputs.cache
+D:\CPP\Stealify\Frontend\obj\Release\Frontend.exe
+D:\CPP\Stealify\Frontend\obj\Release\Frontend.pdb

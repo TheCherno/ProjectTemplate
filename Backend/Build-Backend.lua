@@ -1,5 +1,5 @@
 project "Backend"
-   kind "StaticLib"
+   kind "SharedLib" -- Corrected from "Dynamic"
    language "C++"
    cppdialect "C++20"
    targetdir "Binaries/%{cfg.buildcfg}"
@@ -7,13 +7,26 @@ project "Backend"
 
    files { "./**.h", "./**.cpp" }
 
+    links {
+        "jsoncpp"
+    }
+
+    defines {
+        "BACKEND_EXPORTS"
+    }
+
+    libdirs{
+        "../Vendor/dlls"
+    }
+
    includedirs
    {
-      "./"
+      "./",
+      "../Vendor/dlls"
    }
 
-   targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+   targetdir ("../Binaries/" .. OutputDir .. "/Stealify")
+   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/Stealify")
 
    filter "system:windows"
        systemversion "latest"
@@ -35,3 +48,9 @@ project "Backend"
        runtime "Release"
        optimize "On"
        symbols "Off"
+
+   filter { "system:windows", "configurations:Dist" }
+       optimize "Full"
+
+   filter { "system:windows", "configurations:Release or Dist", "kind:SharedLib" }
+       linkoptions { "/OPT:REF" } -- link-time code optimization

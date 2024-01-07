@@ -24,7 +24,7 @@ struct Song {
 
 struct Playlist {
 	std::vector<std::string> songs;
-	
+
 	std::string name;
 	std::string creationDate;
 

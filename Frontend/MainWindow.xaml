@@ -3,8 +3,98 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:Frontend.MVVM.ViewModel"
         xmlns:local="clr-namespace:Frontend"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="732">
-    <Button Content="Play Test Sound" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="Button_Click"/>
+        Title="MainWindow" Height="600" Width="920"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
+
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+    <Border Background="#272537"
+            CornerRadius="20">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <MediaElement x:Name="mediaPlayer">
+                <MediaElement.InputBindings>
+                    <KeyBinding Key="MediaPlayPause" Command="{Binding PlayPauseCommand}"/>
+                </MediaElement.InputBindings>
+            </MediaElement>
+
+                <TextBlock Text="Stealify"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            Margin="20,0,0,0"
+            Foreground="White"
+            FontSize="22"/>
+
+            <StackPanel Grid.Row="1">
+                <RadioButton Content="Home"
+                             Height="50"
+                             Foreground="White"
+                             FontSize="14"
+                             VerticalAlignment="Stretch"
+                             HorizontalAlignment="Stretch"
+                             Margin="50,0,0,0"
+                             Style="{StaticResource NoDotRadioButtonStyle}"
+                             IsChecked="True"
+                             BorderThickness="0"
+                             BorderBrush="{x:Null}" Checked="RadioButton_Checked"
+                             Command="{Binding HomeViewCommand}"/>
+
+                <RadioButton Content="Liked Songs"
+             Height="50"
+             Foreground="White"
+             FontSize="14"
+             VerticalAlignment="Stretch"
+             HorizontalAlignment="Stretch"
+             Margin="50,0,0,0"
+             Style="{StaticResource NoDotRadioButtonStyle}"
+             IsChecked="False"
+             BorderThickness="0"
+             BorderBrush="{x:Null}" Checked="RadioButton_Checked"
+                             Command="{Binding LikedSongsViewCommand}"/>
+
+                <RadioButton Content="Download"
+             Height="50"
+             Foreground="White"
+             FontSize="14"
+             VerticalAlignment="Stretch"
+             HorizontalAlignment="Stretch"
+             Margin="50,0,0,0"
+             Style="{StaticResource NoDotRadioButtonStyle}"
+             IsChecked="False"
+             BorderThickness="0"
+             BorderBrush="{x:Null}" Checked="RadioButton_Checked"/>
+            </StackPanel>
+
+            <TextBox Width="250"
+                     Height="40"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Left"
+                     Style="{StaticResource ModernTextBox}"
+                     Margin="5"
+                     Grid.Column="1"/>
+
+            <ContentControl Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="10"
+                            Content="{Binding CurrentView}"/>
+        </Grid>
+
+    </Border>
+
 </Window>

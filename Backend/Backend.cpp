@@ -3,7 +3,7 @@
 #include "Settings.h"
 
 #include "MusicTypes.h"
-//#include <FileManagment.h>
+#include <FileManagment.h>
 
 #include <thread>
 
@@ -20,7 +20,6 @@
 #include <mmsystem.h>
 
 #include <SFML/Audio.hpp>
-#include "AL/al.h"
 
 
 namespace Backend {
@@ -31,29 +30,28 @@ namespace Backend {
 
 	bool playingPlaylist = false;
 
+	sf::Sound stest;
+
 	std::string action;
 	std::string userInput;
 
-	//sf::SoundBuffer buffer;
-	//sf::Sound sound;
-
-	//SaveStrategy saveStrategy = MP3;
+	SaveStrategy saveStrategy = MP3;
 	bool m_debug;
 
 	void initializeApplication(bool debug) {
 		m_debug = debug;
 
 		checkFFMPEGInstallation();
-		//reloadDirectory(loadedDirectory, playlists);
+		reloadDirectory(loadedDirectory, playlists);
 	}
 
-	void printAndHandleInput() {
+	void printAndHandleInput(sf::Sound& sound, sf::SoundBuffer& buffer) {
 
 		system("cls");
 
-		//if (sound.getStatus() == sf::Sound::Stopped) {
-			//currentSong.isPlaying = false;
-		//}
+		if (sound.getStatus() == sf::Sound::Stopped) {
+			currentSong.isPlaying = false;
+		}
 
 		std::cout << "Currently playing: " + currentSong.songName + "\n";
 		std::cout << "------------" << (currentSong.isPlaying ? "Playing" : "Paused") << "------------" << std::endl << std::endl;
@@ -84,7 +82,7 @@ namespace Backend {
 		if (action == "download") {
 			std::string url;
 			iss >> url;
-			Backend::addSong(url);
+		//	Backend::addSong(url);
 		}
 		else if (action == "play") {
 			std::string songName;
@@ -95,37 +93,38 @@ namespace Backend {
 					return std::tolower(c);
 					});
 				if (m_debug) std::cout << "Playing " + songName << std::endl;
-				Backend::playSong(songName);
+				//Backend::playSong(songName, buffer, sound);
 			}
 			else {
 				currentPlaylist = getPlaylist(songName);
 				playingPlaylist = true;
-				playSong(currentPlaylist.songs.at(0));
+				//playSong(currentPlaylist.songs.at(0), buffer,sound);
 			}
 		}
 		else if (action == "volume") {
 			int volume;
 			if (iss >> volume) {
-				setVolume(volume);
+				setVolume(volume, sound);
 			}
 			else {
-				float currentVolume; //= sound.getVolume();
+				float currentVolume = sound.getVolume();
 				std::cout << "Current volume set to " << currentVolume << std::endl;
 				awaitEnter();
 			}
 		}
 		else if (action == "pause") {
-			//sound.pause();
+			sound.pause();
 			currentSong.isPlaying = false;
 			currentSong.isPaused = true;
 		}
 		else if (action == "resume") {
-			//sound.play();
+			sound.play();
 			currentSong.isPlaying = true;
 			currentSong.isPaused = false;
 		}
 		else if (action == "reload") {
-			//reloadDirectory(loadedDirectory, playlists);
+			checkFFMPEGInstallation();
+			reloadDirectory(loadedDirectory, playlists);
 		}
 		else if (action == "list") {
 			Json::Value songs = loadedDirectory["songs"];
@@ -149,7 +148,7 @@ namespace Backend {
 			if (secondAction == "add") {
 				std::string playlistName;
 				iss >> playlistName;
-				if (playlistName == "" || (getPlaylist(playlistName).name == "")) {
+				if (playlistName == "") {
 					std::cout << "usage: playlist add <playlistName> <songName>" << std::endl;
 					awaitEnter();
 					return;
@@ -173,8 +172,8 @@ namespace Backend {
 					}
 				}
 				playlist.songs.push_back(songName);
-				//addToPlaylistDirectory(playlist);
-				//reloadDirectory(loadedDirectory, playlists);
+				addToPlaylistDirectory(playlist);
+				reloadDirectory(loadedDirectory, playlists);
 				std::cout << "Added " << songName << " to " << playlistName << std::endl;
 				awaitEnter();
 			}
@@ -243,23 +242,13 @@ namespace Backend {
 		}
 	}
 
-	void addSong(std::string url) {
+	void addSong(std::string url, std::string songName, std::string artist) {
 		Song song;
 
 		std::string filePath = downloadSong(url);
 
-		std::string songName;
-
-		std::cout << "\nEnter the name of the song: \n";
-
-		std::getline(std::cin, songName);
-
 		song.songName = songName;
 
-		std::string artist;
-
-		std::cout << "Enter the artist: \n";
-		std::getline(std::cin, artist);
 		song.artist = artist;
 
 		if (filePath == "-1") {
@@ -269,7 +258,7 @@ namespace Backend {
 		}
 		std::string storageLocation;
 		try {
-			storageLocation; //= //convertToAudio(filePath, saveStrategy, songName);
+			storageLocation = convertToAudio(filePath, saveStrategy, songName);
 		}
 		catch (const std::exception& e) {
 			std::cout << e.what() << std::endl;
@@ -287,23 +276,23 @@ namespace Backend {
 		}
 		catch (const std::filesystem::filesystem_error& e) {
 			std::cerr << "Error: " << e.what() << std::endl;
-			//removeSongFiles(song.storageLocation, saveStrategy);
+			removeSongFiles(song.storageLocation, saveStrategy);
 			return;
 		}
 
 
-		//if (!addToSongDirectory(song, saveStrategy)) {
-			//std::cout << "Song coulnt be added to directory, deleting may be required!\n";
-			//removeSongFiles(song.storageLocation, saveStrategy);
-		
+		if (!addToSongDirectory(song, saveStrategy)) {
+			std::cout << "Song coulnt be added to directory, deleting may be required!\n";
+			removeSongFiles(song.storageLocation, saveStrategy);
+		}
 
-		//reloadDirectory(loadedDirectory, playlists);
+		reloadDirectory(loadedDirectory, playlists);
 	}
 
 	Song getSong(std::string songName) {
 		Song song;
 
-		/*if (!loadedDirectory["songs"][songName].isNull()) {
+		if (!loadedDirectory["songs"][songName].isNull()) {
 			song.songName = loadedDirectory["songs"][songName]["songName"].asString();
 			song.storageLocation = loadedDirectory["songs"][songName]["storageLocation"].asString();
 			song.artist = loadedDirectory["songs"][songName]["artist"].asString();
@@ -314,7 +303,7 @@ namespace Backend {
 			std::cout << "Couldn't find song in loaded dictionary\n";
 			if (m_debug) awaitEnter();
 			return song;
-		}*/
+		}
 
 		return song;
 	}
@@ -322,74 +311,67 @@ namespace Backend {
 	Playlist getPlaylist(std::string playlistName) {
 		//std::cout << "checking if " << playlistName;
 		//awaitEnter();
-		//auto it;// = std::find_if(playlists.begin(), playlists.end(), [&playlistName](const Playlist& playlist) {
-			//return playlist.name == playlistName;
-			//});
+		auto it = std::find_if(playlists.begin(), playlists.end(), [&playlistName](const Playlist& playlist) {
+			return playlist.name == playlistName;
+			});
 
-	//	if (it != playlists.end()) {
-		//	return *it;
-		//}
-		//else {
-			//return Playlist();
-		//}
-		return Playlist();
+		if (it != playlists.end()) {
+			return *it;
+		}
+		else {
+			return Playlist();
+		}
 	}
 
 	void playSong(std::string songName) {
-		//currentSong = getSong(songName);
-		//currentSong.isPlaying = true;
+		sf::SoundBuffer buffer;
+		sf::Sound sound;
+		currentSong = getSong(songName);
+		currentSong.isPlaying = true;
+		sound.setVolume(4);
+		std::string path = currentSong.storageLocation;
 
-		//std::string path = currentSong.storageLocation;
+		if (!buffer.loadFromFile(path)) {
+			std::cerr << "Failed to load audio file." << std::endl;
+		}
 
-		//if (!buffer.loadFromFile(path)) {
-			//std::cerr << "Failed to load audio file." << std::endl;
-		//}
+		std::cout << loadedDirectory["songs"];
 
-		//sound.sf::Sound::setBuffer(buffer);
+		sound.sf::Sound::setBuffer(buffer);
 
-		//std::thread playbackThread([&]() {
-			//sound.play();
-			//while (sound.getStatus() == sf::Sound::Playing) {
-				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			//}
-			/*/currentSong.isPlaying = false;
+		std::thread playbackThread([&]() {
+			sound.play();
+			while (sound.getStatus() == sf::Sound::Playing) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			}
+			currentSong.isPlaying = false;
 			if (playingPlaylist) {
 				currentPlaylist.songIndex += 1;
 				if (currentPlaylist.songIndex < currentPlaylist.songs.size()) {
 					Song nextSong;
-					//nextSong = getNextSongFromPlaylist();
-					playSong(nextSong.songName);
+					nextSong = getNextSongFromPlaylist();
+					//playSong(nextSong.songName, buffer,sound);
 				}
 				else {
 					currentPlaylist.songIndex = 0;
 					playingPlaylist = false;
 				}
 			}
-			});*/
+			});
 
-		/*while (currentSong.isPlaying) {
-			printAndHandleInput();
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		}
-
-		playbackThread.join();*/
+		playbackThread.join();
 	}
 
 	Song getNextSongFromPlaylist() {
-		//return getSong(currentPlaylist.songs.at(currentPlaylist.songIndex));
-		return Song();
+		return getSong(currentPlaylist.songs.at(currentPlaylist.songIndex));
 	}
 
-	void setVolume(int volume) {
-		//sound.setVolume(volume);
+	void setVolume(int volume, sf::Sound& sound) {
+		sound.setVolume(volume);
 	}
 
 	void checkFFMPEGInstallation() {
-
-	}
-
-	/*void checkFFMPEGInstallation() {
-		std::string output = exec("C:\\FFmpeg\\ffmpeg\\bin\\ffmpeg.exe");
+		std::string output = exec("ffmpeg");
 
 		if (m_debug) { std::cout << output; awaitEnter(); }
 
@@ -439,5 +421,5 @@ namespace Backend {
 			std::getline(std::cin, dummy);
 			exit(0);
 		}
-	}*/
+	}
 }

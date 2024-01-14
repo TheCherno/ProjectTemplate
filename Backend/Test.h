@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdio.h>
+#include <string>
+
 #ifdef BACKEND_EXPORTS
 #define BACKEND __declspec(dllexport)
 #else
@@ -7,3 +10,5 @@
 #endif
 
 extern "C" BACKEND void printTest();
+extern "C" BACKEND void playSong(const char* songName);
+extern "C" BACKEND void setVolume(int volume);

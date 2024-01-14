@@ -4,20 +4,20 @@
 #include <iostream>
 #include <SFML\Audio.hpp>
 #include "AL/al.h"
-
-sf::SoundBuffer sb;
-
+#include "FileManagment.h"
 extern "C" BACKEND void printTest()
 {
-    //sf::SoundBuffer buffer;
-    /*if (!buffer.loadFromFile("C:\\Users\\Kreiseljustus\\Desktop\\SFML\\SFML-2.6.1\\examples\\sound\\resources\\ding.mp3")) {
-        // Print error message or handle the error
-        std::cerr << "Failed to load audio file:";
-    }*/
-    std::cout << "1";
-    //sf::SoundBuffer sf;
-    //sf::Sound sound;
-    
-    //Backend::initializeApplication(true);
-    std::cout << "Test\n";
+    std::cout << "Test";
+    sf::SoundBuffer buffer;
+    sf::Sound sound;
+    Backend::initializeApplication(false);
+    Backend::playSong("20:15");
+    //std::cout << "Downloaded " << url;
+}
+
+BACKEND void playSong(const char* songName)
+{
+    std::cout << "Trying to play " << songName << std::endl;
+    Backend::initializeApplication(false);
+    Backend::playSong(songName);
 }

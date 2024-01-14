@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,7 +19,7 @@ namespace Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        [DllImport("Backend.dll")]
+        [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void printTest();
 
         public MainWindow()
@@ -26,16 +27,15 @@ namespace Frontend
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                printTest();
-            }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine($"Exception: {ex.Message}");
-            }
+            Console.WriteLine("Tet");
+            await Task.Run(() => { printTest(); });
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            Console.Write("clicked");
         }
     }
 }

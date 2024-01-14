@@ -43,11 +43,10 @@ namespace Frontend.MVVM.View
             if(songsListBox.SelectedItem != null)
             {
                 Song selectedSong = (Song)songsListBox.SelectedItem;
-
                 //StringBuilder titleBuilder = new StringBuilder(selectedSong.Title);
 
                 Task.Run(() => playSong("20:15"));
-                songsListBox.SelectedItem = null;
+                //songsListBox.SelectedItem = null;
             } else
             {
                 Console.WriteLine("Null");

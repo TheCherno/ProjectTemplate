@@ -8,14 +8,14 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Background="Transparent">
     <Grid>
-        <ListBox x:Name="songsListBox" FocusVisualStyle="{x:Null}" HorizontalAlignment="Stretch" Background="Transparent" VerticalContentAlignment="Stretch" BorderThickness="0" SelectionChanged="songsListBox_SelectionChanged" Foreground="{x:Null}">
+        <ListBox x:Name="songsListBox" FocusVisualStyle="{x:Null}" HorizontalAlignment="Stretch" Background="Transparent" VerticalContentAlignment="Stretch" BorderThickness="0" SelectionChanged="songsListBox_SelectionChanged" Foreground="{x:Null}" SelectionMode="Single">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="#482F60" BorderThickness="1" Margin="5" Height="40" Width="650">
                         <Grid>
                             <Image Source="{Binding ImagePath}" Width="40" Height="60" HorizontalAlignment="Left"/>
                             <StackPanel>
-                                <TextBlock Text="{Binding Title}" FontWeight="Bold" Margin="0,10" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold" Margin="0,10" HorizontalAlignment="Center" Foreground="White"/>
                             </StackPanel>
                             <TextBlock Text="{Binding Artist}" Foreground="LightGray" HorizontalAlignment="Right" Margin="0,10,75,5"/>
                             <TextBlock Text="{Binding Duration}" Margin="0,10,20,5" HorizontalAlignment="Right"/>
@@ -23,23 +23,6 @@
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <ContentPresenter/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="Transparent"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ListBox.ItemContainerStyle>
         </ListBox>
     </Grid>
 </UserControl>

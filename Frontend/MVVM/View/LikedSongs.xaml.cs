@@ -21,8 +21,10 @@ namespace Frontend.MVVM.View
     /// </summary>
     public partial class LikedSongs : UserControl
     {
-        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl, CharSet= CharSet.Ansi)]
-        private static extern void playSong(string songName);
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateAudioManager();
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void PlayPog(IntPtr audio, string path);
         public LikedSongs()
         {
             InitializeComponent();
@@ -40,16 +42,13 @@ namespace Frontend.MVVM.View
 
         private void songsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(songsListBox.SelectedItem != null)
+            Console.WriteLine("Trying");
+            IntPtr audioManager = CreateAudioManager();
+            Console.WriteLine(audioManager);
+            PlayPog(audioManager,"20:15");
+            while(true)
             {
-                Song selectedSong = (Song)songsListBox.SelectedItem;
-                //StringBuilder titleBuilder = new StringBuilder(selectedSong.Title);
 
-                Task.Run(() => playSong("20:15"));
-                //songsListBox.SelectedItem = null;
-            } else
-            {
-                Console.WriteLine("Null");
             }
         }
     }

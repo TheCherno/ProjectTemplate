@@ -7,7 +7,7 @@
 
 namespace Backend {
 	std::string downloadSong(std::string url);
-	void playSong(std::string songName);
+	void playSong(std::string songName, sf::SoundBuffer buffer, sf::Sound sound);
 	void addSong(std::string url, std::string songName, std::string artist);
 	Song getSong(std::string songName);
 	void printAndHandleInput(sf::Sound& sound, sf::SoundBuffer& buffer);

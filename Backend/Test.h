@@ -1,7 +1,7 @@
 #pragma once
-
 #include <stdio.h>
 #include <string>
+#include "AudioManager.h"
 
 #ifdef BACKEND_EXPORTS
 #define BACKEND __declspec(dllexport)

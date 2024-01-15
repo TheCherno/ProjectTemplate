@@ -30,7 +30,7 @@ namespace Backend {
 
 	bool playingPlaylist = false;
 
-	sf::Sound stest;
+	//sf::Sound stest;
 
 	std::string action;
 	std::string userInput;
@@ -323,9 +323,7 @@ namespace Backend {
 		}
 	}
 
-	void playSong(std::string songName) {
-		sf::SoundBuffer buffer;
-		sf::Sound sound;
+	void playSong(std::string songName, sf::SoundBuffer buffer, sf::Sound sound) {
 		currentSong = getSong(songName);
 		currentSong.isPlaying = true;
 		sound.setVolume(4);

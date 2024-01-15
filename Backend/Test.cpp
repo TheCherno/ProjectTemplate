@@ -11,7 +11,7 @@ extern "C" BACKEND void printTest()
     sf::SoundBuffer buffer;
     sf::Sound sound;
     Backend::initializeApplication(false);
-    Backend::playSong("20:15");
+   // Backend::playSong("20:15");
     //std::cout << "Downloaded " << url;
 }
 
@@ -19,5 +19,5 @@ BACKEND void playSong(const char* songName)
 {
     std::cout << "Trying to play " << songName << std::endl;
     Backend::initializeApplication(false);
-    Backend::playSong(songName);
+    //Backend::playSong(songName);
 }

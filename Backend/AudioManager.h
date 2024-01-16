@@ -14,25 +14,38 @@ namespace Backend {
 	private:
 		sf::SoundBuffer buffer;
 		sf::Sound sound;
-
 	public:
 		AudioManager() {
 
 		}
 
-		void playPog(std::string songName) {
-			std::cout << "Angekomen!";
+		~AudioManager() {
+			
+		}
+
+		void playSong(const char* name) {
 			Backend::initializeApplication(false);
-			Backend::playSong(songName, buffer, sound);
+			Backend::playSong(name, buffer, sound);
+		}
+
+		void test() {
+			std::cout << "Void in class";
 		}
 	};
 	
 	extern "C" BACKEND AudioManager* CreateAudioManager() {
-		return new AudioManager();
+		AudioManager* audio = new AudioManager();
+		std::cout << "AudioManager created: " << audio << std::endl;
+		return audio;
 	}
 
-	extern "C" BACKEND void PlayPog(AudioManager* audio, std::string name) {
-		std::cout << "aflaljfj";
-		audio->playPog(name);
+	extern "C" BACKEND void AudioManager_PlayPog(AudioManager* audio, const char* name) {
+		std::cout << "Received " << name << std::endl;
+		audio->playSong(name);
+		audio->test();
+	}
+	extern "C" BACKEND void DestroyAudioManager(AudioManager * audio) {
+		std::cout << "Destroying AudioManager: " << audio << std::endl;
+		delete audio;
 	}
 }

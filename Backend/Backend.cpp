@@ -335,9 +335,9 @@ namespace Backend {
 
 		std::cout << loadedDirectory["songs"];
 
-		sound.sf::Sound::setBuffer(buffer);
+		sound.setBuffer(buffer);
 
-		std::thread playbackThread([&]() {
+		
 			sound.play();
 			while (sound.getStatus() == sf::Sound::Playing) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -355,9 +355,6 @@ namespace Backend {
 					playingPlaylist = false;
 				}
 			}
-			});
-
-		playbackThread.join();
 	}
 
 	Song getNextSongFromPlaylist() {

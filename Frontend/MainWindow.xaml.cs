@@ -19,18 +19,9 @@ namespace Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
-        public static extern void printTest();
-
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("Tet");
-            await Task.Run(() => { printTest(); });
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)

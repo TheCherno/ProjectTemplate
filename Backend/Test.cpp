@@ -17,7 +17,5 @@ extern "C" BACKEND void printTest()
 
 BACKEND void playSong(const char* songName)
 {
-    std::cout << "Trying to play " << songName << std::endl;
-    Backend::initializeApplication(false);
-    //Backend::playSong(songName);
+   
 }

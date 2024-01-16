@@ -24,7 +24,9 @@ namespace Frontend.MVVM.View
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr CreateAudioManager();
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PlayPog(IntPtr audio, string path);
+        public static extern void AudioManager_PlayPog(IntPtr audio, [MarshalAs(UnmanagedType.LPStr)] string name);
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void DestroyAudioManager(IntPtr audio);
         public LikedSongs()
         {
             InitializeComponent();
@@ -40,16 +42,13 @@ namespace Frontend.MVVM.View
             songsListBox.ItemsSource = list;
         }
 
-        private void songsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void songsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("Trying");
             IntPtr audioManager = CreateAudioManager();
             Console.WriteLine(audioManager);
-            PlayPog(audioManager,"20:15");
-            while(true)
-            {
-
-            }
+            await Task.Run(() => { AudioManager_PlayPog(audioManager, "20:15"); });
+            DestroyAudioManager(audioManager);
         }
     }
 

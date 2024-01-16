@@ -326,7 +326,7 @@ namespace Backend {
 	void playSong(std::string songName, sf::SoundBuffer buffer, sf::Sound sound) {
 		currentSong = getSong(songName);
 		currentSong.isPlaying = true;
-		sound.setVolume(4);
+		//sound.setVolume(4);
 		std::string path = currentSong.storageLocation;
 
 		if (!buffer.loadFromFile(path)) {

@@ -48,7 +48,7 @@ namespace Frontend.MVVM.View
             IntPtr audioManager = CreateAudioManager();
             Console.WriteLine(audioManager);
             await Task.Run(() => { AudioManager_PlayPog(audioManager, "20:15"); });
-            DestroyAudioManager(audioManager);
+            //DestroyAudioManager(audioManager);
         }
     }
 

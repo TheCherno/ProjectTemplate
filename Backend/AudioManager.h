@@ -20,7 +20,7 @@ namespace Backend {
 		}
 
 		~AudioManager() {
-			
+
 		}
 
 		void playSong(const char* name) {
@@ -28,8 +28,8 @@ namespace Backend {
 			Backend::playSong(name, buffer, sound);
 		}
 
-		void test() {
-			std::cout << "Void in class";
+		void setVolume(int volume) {
+			sound.setVolume(volume);
 		}
 	};
 	
@@ -39,10 +39,10 @@ namespace Backend {
 		return audio;
 	}
 
-	extern "C" BACKEND void AudioManager_PlayPog(AudioManager* audio, const char* name) {
+	extern "C" BACKEND void AudioManager_PlaySong(AudioManager* audio, const char* name) {
+		audio->setVolume(0);
 		std::cout << "Received " << name << std::endl;
 		audio->playSong(name);
-		audio->test();
 	}
 	extern "C" BACKEND void DestroyAudioManager(AudioManager * audio) {
 		std::cout << "Destroying AudioManager: " << audio << std::endl;

@@ -1,6 +1,10 @@
 -- premake5.lua
 workspace "New Project"
-   architecture "x64"
+   if os.host() == "macosx" then
+      architecture "ARM64"
+   else
+      architecture "x64"
+   end
    configurations { "Debug", "Release", "Dist" }
    startproject "App"
 
